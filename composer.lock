@@ -248,6 +248,7 @@
             "time": "2019-08-13T17:33:27+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "fzaninotto/faker",
             "version": "v1.8.0",
             "source": {
@@ -298,6 +299,8 @@
             "time": "2018-07-12T10:23:15+00:00"
         },
         {
+=======
+>>>>>>> ft-get-movies-story(movies):
             "name": "guzzlehttp/guzzle",
             "version": "6.3.3",
             "source": {
