@@ -17,3 +17,10 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'email' => $faker->email,
     ];
 });
+
+use App\Models\Comment;
+use database\factories\CommentFactory;
+
+$factory->define(Comment::class, function (Faker\Generator $faker) {
+    return CommentFactory::getFactory($faker);
+});
