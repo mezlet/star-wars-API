@@ -60,7 +60,7 @@ class Helpers{
      */
     public static function getMovie($title){
         $movie = [];
-        $data = StarWars::getMovie($title);
+        $data = StarWars::getMovie('https://swapi.co/api/films/?search='.$title);
         array_push($movie,[
             'comment_count' => self::getCommentCount($title),
             'title' => $data->results[0]->title,
@@ -91,5 +91,29 @@ class Helpers{
         $count = Comment::where('title',$title)->count();
         return $count;
     }
+
+    /**
+     * Get movie list
+     * @return array $movie_list
+     */
+    public static function getMovieList(){
+        $data = starwars::getMovie("https://swapi.co/api/films");
+        $movie_list = [];
+        usort($data->results, function($a, $b)
+        {
+         return strcmp($a->release_date, $b->release_date);
+        });
+
+        foreach($data->results as $movie){
+            array_push($movie_list,[
+                'title'=> $movie->title,
+                'opening crawl' =>$movie->opening_crawl,
+                'release_date' => $movie->release_date,
+                'comment_count' => self::getCommentCount($movie->title)
+            ]);
+        } 
+        return $movie_list;
+    }
+
 
 }

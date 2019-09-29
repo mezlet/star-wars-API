@@ -6,10 +6,9 @@ use Exception;
 
 class StarWars {
 
-    public static function getMovie($title){
+    public static function getMovie($link){
         $guzzle_client = new Client();
-        $movie = [];
-        $result = $guzzle_client->request('GET','https://swapi.co/api/films/?search='.$title);
+        $result = $guzzle_client->request('GET',$link);
         if ($result->getStatusCode() !== 200) {
             throw new Exception('Error connecting to Swapi');
         }

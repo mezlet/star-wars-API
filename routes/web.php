@@ -18,5 +18,7 @@ $router->get('/', function () use ($router) {
 $router->group(['prefix' => 'api/v1'], function () use ($router) {
     $router->post('comment/{title}', 'CommentController@addComment');
     $router->get('/movies/{title}', 'MovieController@getMovie');
+    $router->get("/movie-list", 'MovieController@getMovieList');
+
 
 });
