@@ -10,8 +10,8 @@ class CommentFactory
     {
         return [
             'ip' => $faker->randomNumber(),
-            'details' => $faker->text(500),
-            'movie_id' => $faker->randomNumber(),
+            'comment' => $faker->text(500),
+            'title' => $faker->text(20),
         ];
         
     }
