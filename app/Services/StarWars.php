@@ -1,5 +1,6 @@
 <?php
 namespace App\Services;
+use App\Utils\Helpers;
 
 use GuzzleHttp\Client;
 use Exception;
@@ -7,12 +8,17 @@ use Exception;
 class StarWars {
 
     public static function getMovie($link){
-        $guzzle_client = new Client();
+        try{
+            $guzzle_client = new Client();
         $result = $guzzle_client->request('GET',$link);
-        if ($result->getStatusCode() !== 200) {
-            throw new Exception('Error connecting to Swapi');
+        return $result ? json_decode($result->getBody()) : false;
+
+        }catch(\Exception $e){
+
+            return Helpers::errorResponse('500', $e->getMessage());
         }
-        $data = json_decode($result->getBody());
-        return $data;
+        
+
+       
     }
 }

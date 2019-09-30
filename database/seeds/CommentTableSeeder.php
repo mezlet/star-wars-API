@@ -20,7 +20,7 @@ class CommentTableSeeder extends Seeder
         Comment::create([
             'ip' => '35676',
             'comment' => 'we are here now',
-            'title' => 'A place of no return'
+            'movie_id' => 8
         ]);
 
         

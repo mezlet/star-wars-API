@@ -7,7 +7,7 @@ class Comment extends Model
     protected $fillable = [
         'ip',
         'comment',
-        'title'
+        'movie_id'
     ];
     protected $table = 'comment';
     protected $dates = [];
