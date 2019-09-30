@@ -13,12 +13,12 @@ use Laravel\Lumen\Routing\Controller as BaseController;
 
 class MovieController extends Basecontroller{
 
-    public function getMovie($title){
+    public function getMovie($id){
         try{
-            $movies = Helpers::getMovie(ucwords(urldecode($title)));
+            $movies = Helpers::getMovie($id);
             return Helpers::successResponse(200,$movies,'');
         }catch(\Exception $e){
-            return Helpers::errorResponse(500,'Something went wrong.');
+            return Helpers::errorResponse(500,$e->getMessage());
         }
     }
 
@@ -28,7 +28,7 @@ class MovieController extends Basecontroller{
             $movies = Helpers::getMovieList();
             return Helpers::successResponse(200,$movies,'');
         }catch(\Exception $e){
-            return Helpers::errorResponse(500,'Something went wrong.');
+            return Helpers::errorResponse(500,$e->getMessage());
         }
     }
 

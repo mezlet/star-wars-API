@@ -58,15 +58,15 @@ class Helpers{
      * @param string title
      * @return array $movie
      */
-    public static function getMovie($title){
+    public static function getMovie($id){
         $movie = [];
-        $data = StarWars::getMovie('https://swapi.co/api/films/?search='.$title);
+        $data = StarWars::getMovie('https://swapi.co/api/films/'.$id);
         array_push($movie,[
-            'comment_count' => self::getCommentCount($title),
-            'title' => $data->results[0]->title,
-            'opening_crawl' => $data->results[0]->opening_crawl,
-            'character'=> self::getCharacters( $data->results[0]->characters),
-            'realease_date'=> $data->results[0]->release_date
+            'comment_count' => self::getCommentCount($id),
+            'title' => $data->title,
+            'opening_crawl' => $data->opening_crawl,
+            'character'=> self::getCharacters( $data->characters),
+            'realease_date'=> $data->release_date
             ]);
         return $movie;
     }
@@ -76,9 +76,10 @@ class Helpers{
      * @param string $title
      * @return boolean true|false
      */
-    public static function isMovieExist($title){
-        $data = StarWars::getMovie($title);
-        return $data->count === 0 ? false : true;
+    public static function isMovieExist($id){
+        $data = StarWars::getMovie('https://swapi.co/api/films/'.$id);
+        return $data;
+        return $data ? true : false;
     }
 
 
@@ -87,8 +88,8 @@ class Helpers{
      * @param string $title
      * @return int $count
      */
-    public static function getCommentCount($title){
-        $count = Comment::where('title',$title)->count();
+    public static function getCommentCount($id){
+        $count = Comment::where('movie_id',$id)->count();
         return $count;
     }
 
@@ -106,10 +107,8 @@ class Helpers{
 
         foreach($data->results as $movie){
             array_push($movie_list,[
-                'title'=> $movie->title,
-                'opening crawl' =>$movie->opening_crawl,
+                'opening_crawl' =>$movie->opening_crawl,
                 'release_date' => $movie->release_date,
-                'comment_count' => self::getCommentCount($movie->title)
             ]);
         } 
         return $movie_list;

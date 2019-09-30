@@ -11,7 +11,7 @@ class CommentFactory
         return [
             'ip' => $faker->randomNumber(),
             'comment' => $faker->text(500),
-            'title' => $faker->text(20),
+            'movie_id' => $faker->ean8(7),
         ];
         
     }
