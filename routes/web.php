@@ -12,12 +12,19 @@
 */
 
 $router->get('/', function () use ($router) {
-    return $router->app->version();
+    return "Welcome to star wars movie api. Visit https://github.com/mezlet/star-wars-API to view documentation";
 });
 
 $router->group(['prefix' => 'api/v1'], function () use ($router) {
-    $router->post('comment', 'CommentController@addComment');
-    $router->get('/movies/{id}', 'MovieController@getMovie');
-    $router->get("/movie-list", 'MovieController@getMovieList');
-    $router->get("/comments/{id}", 'CommentController@getComment');
+    $router->group(['middleware' => 'validatePaging'], function () use ($router) {
+        $router->get("/movies", 'MovieController@getMovieList');
+    });
+    $router->group(['middleware' => 'validateParams'], function () use ($router) {
+        $router->group(['middleware' => 'validateSorting'], function () use ($router) {
+            $router->get("/movies/{movie_id}/characters/", 'MovieController@getMovie');
+        });
+        $router->post('movies/{movie_id}/comment', 'CommentController@addComment');
+        $router->get("/movies/{movie_id}/comments", 'CommentController@getComments');
+    });
+
 });
