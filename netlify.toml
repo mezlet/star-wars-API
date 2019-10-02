@@ -1,4 +1,0 @@
-[[redirects]]
-  from = "/*"
-  to = "https://clever-lamarr-4a5991.netlify.com/:splat"
-  status = 200

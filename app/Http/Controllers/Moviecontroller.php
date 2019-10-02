@@ -12,23 +12,42 @@ use GuzzleHttp\Client;
 use Laravel\Lumen\Routing\Controller as BaseController;
 
 class MovieController extends Basecontroller{
+    public $request;
 
-    public function getMovie($id){
+    public function __construct(Request $request){
+        $this->request = $request;
+    }
+
+    /**
+     * Get movie list
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getMovieList()
+    {
         try{
-            $movies = Helpers::getMovie($id);
+            $movies = Helpers::getMovieList($this->request->offset, $this->request->limit);
             return Helpers::successResponse(200,$movies,'');
         }catch(\Exception $e){
-            return Helpers::errorResponse(500,$e->getMessage());
+            return Helpers::errorResponse(500,'Something went wrong');
         }
     }
 
-    public static function getMovieList()
-    {
+    /**
+     * Get movie characters
+     * @param string $movie_id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getMovie($movie_id){
+        
         try{
-            $movies = Helpers::getMovieList();
-            return Helpers::successResponse(200,$movies,'');
+            $movies = Helpers::getMovieCharacters($movie_id,$this->request->sort_param,$this->request->filter_param);
+            if($movies){
+                return Helpers::successResponse(200,$movies,'');
+            }
+            return Helpers::errorResponse(404,'Movie not found');
         }catch(\Exception $e){
-            return Helpers::errorResponse(500,$e->getMessage());
+            return $e;
+            return Helpers::errorResponse(500,'Something went wrong');
         }
     }
 
