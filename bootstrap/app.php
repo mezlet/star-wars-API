@@ -61,9 +61,14 @@ $app->singleton(
 //     App\Http\Middleware\ExampleMiddleware::class
 // ]);
 
-// $app->routeMiddleware([
-//     'auth' => App\Http\Middleware\Authenticate::class,
-// ]);
+$app->routeMiddleware([
+    'auth' => App\Http\Middleware\Authenticate::class,
+    'validateParams' => App\Http\Middleware\ValidateParams::class,
+    'validateSorting' => App\Http\Middleware\ValidateSortFilter::class,
+    'validatePaging' => App\Http\Middleware\ValidateOffsetLimit::class,
+
+
+]);
 
 /*
 |--------------------------------------------------------------------------

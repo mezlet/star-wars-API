@@ -12,7 +12,7 @@ use Laravel\Lumen\Routing\Controller as BaseController;
 
 class CommentController extends Basecontroller{
 
-    private $request,$ip, $movie_id;
+    private $request,$ip;
 
     public function __construct(Request $request ){
         $this->request = $request;
@@ -20,14 +20,20 @@ class CommentController extends Basecontroller{
 
     }
 
-    public function addComment(){
+    /**
+     * Add comment
+     * @param string $movie_id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function addComment($movie_id){
         $this->validate->validateComment($this->request);
         try{
-            if(!Helpers::isMovieExist($this->request->movie_id)){
+            if(!Helpers::getMovieCharacters($movie_id)){
                 return Helpers::errorResponse(404,'Movie not found');
             }
             $comment = Comment::create($this->request->all() + [
                 'ip'=>$this->request->ip(),
+                'movie_id'=>$movie_id
                 ]);
 
             if($comment){
@@ -35,20 +41,24 @@ class CommentController extends Basecontroller{
                 }
                 
         }catch(\Exception $e){
-            return Helpers::errorResponse(500,$e->getMessage());
+            return Helpers::errorResponse(500,'Something went wrong');
         }
     }
 
-    public function getComment($id){
-        $this->movie_id =$id;
+    /**
+     * Get commment
+     * @param string $movie_id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getComments($movie_id){
         try{
-
-            $comment = Comment::where('movie_id',$this->movie_id)->orderBy('created_at', 'desc')->get();
-            if($comment){
+            $comment = Helpers::getComments($movie_id);
+            if($comment->total()!= 0){
                 return  Helpers::successResponse(200,$comment,'');
              }
+             return Helpers::errorResponse(404,'No comment found'); 
         }catch(\Exception $e){
-            return Helpers::errorResponse(500,$e->getMessage()); 
+            return Helpers::errorResponse(500,'Something went wrong'); 
         }
     }
 
