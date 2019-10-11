@@ -37,12 +37,23 @@ run "make start" to start the docker environment
 run "make start"
 ```
 
+## Getting Started
+```
+You can consume the API from https://start-wars-movies.appspot.com
+```
+
 ## Endpoints
 
 ### Get Movies
 
 #### Request
 `GET /api/v1/movies?offset=0&limit=2`
+
+##### URL Param
+```
+offset: int
+limit: int
+```
 
 #### Response
 ```
@@ -144,6 +155,11 @@ run "make start"
 
 #### Request
 `GET api/v1/movies/1/characters?sort_param=name&filter_param=female`
+##### URL Params
+```
+sort_param: string
+filter_param: string
+```
 
 #### Response
 ```
@@ -151,9 +167,6 @@ run "make start"
     "success": true,
     "data": [
         {
-            "comment_count": 5,
-            "title": "A New Hope",
-            "opening_crawl": "It is a period of civil war.\r\nRebel spaceships, striking\r\nfrom a hidden base, have won\r\ntheir first victory against\r\nthe evil Galactic Empire.\r\n\r\nDuring the battle, Rebel\r\nspies managed to steal secret\r\nplans to the Empire's\r\nultimate weapon, the DEATH\r\nSTAR, an armored space\r\nstation with enough power\r\nto destroy an entire planet.\r\n\r\nPursued by the Empire's\r\nsinister agents, Princess\r\nLeia races home aboard her\r\nstarship, custodian of the\r\nstolen plans that can save her\r\npeople and restore\r\nfreedom to the galaxy....",
             "character": [
                 {
                     "name": "Beru Whitesun lars",
@@ -170,6 +183,8 @@ run "make start"
             ],
             "realease_date": "1977-05-25",
             "total_character": 2
+            "total_height": 315
+            "total_height_in_ft: "10′ 4″
         }
     ],
     "message": ""

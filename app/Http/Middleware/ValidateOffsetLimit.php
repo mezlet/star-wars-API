@@ -17,7 +17,7 @@ class ValidateOffsetLimit
     {
         if ((isset($request->limit)&& !is_numeric($request->limit)) ||
         ( isset($request->offset) && !is_numeric($request->offset))) {
-            return Helpers::errorresponse(400,"Invalid limit/offset parameter supplied.");
+            return response()->json(['success'=>false, 'error'=>"Invalid limit/offset parameter supplied."],400);
         }
         return $next($request);
     }

@@ -5,60 +5,62 @@ namespace App\Http\Controllers;
 use Exception;
 use App\Models\Comment;
 use Illuminate\Http\Request;
-use App\Utils\Helpers;
+use App\Helpers;
 use App\Services\StarWars;
 use App\Utils\Validation;
+use Illuminate\Support\Facades\Redis;
 use Laravel\Lumen\Routing\Controller as BaseController;
 
 class CommentController extends Basecontroller{
 
-    private $request,$ip;
-
-    public function __construct(Request $request ){
-        $this->request = $request;
-        $this->validate = new Validation();
-
+    private $ip, $redis;
+    public function __construct(){
+        $this->redis = Redis::connection();
     }
 
     /**
      * Add comment
-     * @param string $movie_id
+     * @param int $movie_id
+     * @param object $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function addComment($movie_id){
-        $this->validate->validateComment($this->request);
-        try{
-            if(!Helpers::getMovieCharacters($movie_id)){
-                return Helpers::errorResponse(404,'Movie not found');
-            }
-            $comment = Comment::create($this->request->all() + [
-                'ip'=>$this->request->ip(),
+    public function addComment(Request $request, int $movie_id){
+        $this->validate($request, ['comment' => 'required|string|max:500']); 
+            try{
+            $comment = Comment::create($request->all() + [
+                'ip'=>$request->ip(),
                 'movie_id'=>$movie_id
                 ]);
 
             if($comment){
-                   return  Helpers::successResponse(201,$comment,'Comment created successfully.');
+                 return response()->json([
+                 "success"=>true, "data"=>$comment,"message"=>'Comment created successfully.'],201);
                 }
                 
-        }catch(\Exception $e){
-            return Helpers::errorResponse(500,'Something went wrong');
+        }catch(TypeError $e){
+            return response()->json([success=>false, error=>$e->getMessage()]);
+        }
+        catch(\Exception $e){
+            return response()->json(["success"=>false, "error"=>'Something went wrong'],500);
         }
     }
 
     /**
      * Get commment
-     * @param string $movie_id
+     * @param int $movie_id
+     * @param object $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getComments($movie_id){
+    public function getComments(Request $request, int $movie_id){
+
         try{
-            $comment = Helpers::getComments($movie_id);
-            if($comment->total()!= 0){
-                return  Helpers::successResponse(200,$comment,'');
-             }
-             return Helpers::errorResponse(404,'No comment found'); 
-        }catch(\Exception $e){
-            return Helpers::errorResponse(500,'Something went wrong'); 
+
+            $comment = Helpers::getComments($movie_id, $request->offset, $request->limit );
+            return response()->json(["success"=>true, "data"=>$comment],200);
+            
+            }
+        catch(\Exception $e){
+            return response()->json(["success"=>false, "error"=>'Something went wrong'],500);
         }
     }
 

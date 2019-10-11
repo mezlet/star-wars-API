@@ -19,12 +19,12 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
     $router->group(['middleware' => 'validatePaging'], function () use ($router) {
         $router->get("/movies", 'MovieController@getMovieList');
     });
-    $router->group(['middleware' => 'validateParams'], function () use ($router) {
+    $router->group(['middleware' => ['validateParams','isMovieExist']], function () use ($router) {
+        $router->get("/movies/{movie_id}/comments", 'CommentController@getComments');
         $router->group(['middleware' => 'validateSorting'], function () use ($router) {
             $router->get("/movies/{movie_id}/characters/", 'MovieController@getMovie');
         });
-        $router->post('movies/{movie_id}/comment', 'CommentController@addComment');
-        $router->get("/movies/{movie_id}/comments", 'CommentController@getComments');
+        $router->post('movies/{movie_id}/comments', 'CommentController@addComment');
     });
 
 });

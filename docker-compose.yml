@@ -2,6 +2,8 @@ version: '2.1'
 volumes:
   db_data:
     external: true
+  redis_data:
+    external: true
 
 services:
   app:
@@ -10,6 +12,7 @@ services:
       dockerfile: Dockerfile
     links:
       - database
+      - redis
     volumes:
       - ./:/app
     ports:
@@ -26,6 +29,7 @@ services:
       DB_DATABASE: gnwfdwwo
       DB_USERNAME: gnwfdwwo
       DB_PASSWORD: D87o95IHOzY1zJMaDGGPGsGiVg6kOO-O
+      REDIS_URL: redis://redis_cache
     depends_on:
       database:
         condition: service_healthy
@@ -46,4 +50,12 @@ services:
       interval: 5s
       timeout: 10s
       retries: 5
-  
+  redis:
+    image: redis:5.0-alpine
+    container_name: redis_cache
+    expose:
+      - '6379'
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data

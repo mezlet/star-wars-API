@@ -15,8 +15,8 @@ class ValidateParams
      */
     public function handle($request, Closure $next)
     {
-        if (!is_numeric($request->movie_id)) {
-            return Helpers::errorresponse(400,"Invalid parameter supplied.");
+        if (!is_numeric($request->movie_id) || empty($request->movie_id)) {
+            return response()->json(['success'=>false, 'error'=>"Invalid parameter supplied."],400);
         }
         return $next($request);
     }

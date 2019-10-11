@@ -6,6 +6,7 @@ require_once __DIR__.'/../vendor/autoload.php';
     dirname(__DIR__)
 ))->bootstrap();
 
+
 /*
 |--------------------------------------------------------------------------
 | Create The Application
@@ -20,6 +21,9 @@ require_once __DIR__.'/../vendor/autoload.php';
 $app = new Laravel\Lumen\Application(
     dirname(__DIR__)
 );
+
+$app->configure('database');
+$app->configure('apidoc');
 
 $app->withFacades();
 
@@ -66,7 +70,7 @@ $app->routeMiddleware([
     'validateParams' => App\Http\Middleware\ValidateParams::class,
     'validateSorting' => App\Http\Middleware\ValidateSortFilter::class,
     'validatePaging' => App\Http\Middleware\ValidateOffsetLimit::class,
-
+    'isMovieExist' => App\Http\Middleware\CheckMovie::class,
 
 ]);
 
@@ -84,6 +88,10 @@ $app->routeMiddleware([
 // $app->register(App\Providers\AppServiceProvider::class);
 // $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
+$app->register(Illuminate\Redis\RedisServiceProvider::class);
+$app->register(\Mpociot\ApiDoc\ApiDocGeneratorServiceProvider::class);
+
+
 
 /*
 |--------------------------------------------------------------------------

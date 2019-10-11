@@ -18,7 +18,7 @@ class CreateCommentTable extends Migration
             $table->bigIncrements('id');
             $table->string('ip');
             $table->text('comment');
-            $table->bigInteger('movie_id');
+            $table->integer('movie_id');
             $table->timestamps();
         });
     }
