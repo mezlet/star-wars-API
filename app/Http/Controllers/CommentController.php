@@ -8,15 +8,11 @@ use Illuminate\Http\Request;
 use App\Helpers;
 use App\Services\StarWars;
 use App\Utils\Validation;
-use Illuminate\Support\Facades\Redis;
 use Laravel\Lumen\Routing\Controller as BaseController;
 
 class CommentController extends Basecontroller{
 
-    private $ip, $redis;
-    public function __construct(){
-        $this->redis = Redis::connection();
-    }
+    private $ip;
 
     /**
      * Add comment
@@ -37,8 +33,6 @@ class CommentController extends Basecontroller{
                  "success"=>true, "data"=>$comment,"message"=>'Comment created successfully.'],201);
                 }
                 
-        }catch(TypeError $e){
-            return response()->json([success=>false, error=>$e->getMessage()]);
         }
         catch(\Exception $e){
             return response()->json(["success"=>false, "error"=>'Something went wrong'],500);

@@ -12,7 +12,7 @@
 */
 
 $router->get('/', function () use ($router) {
-    return "Welcome to star wars movie api. Visit https://github.com/mezlet/star-wars-API to view documentation";
+    return "Welcome to star wars movie api. Visit https://github.com/mezlet/star-wars-API to navigate repository";
 });
 
 $router->group(['prefix' => 'api/v1'], function () use ($router) {

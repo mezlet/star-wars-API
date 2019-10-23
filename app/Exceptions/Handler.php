@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use Illuminate\Http\Exception\HttpResponseException;
+use Illuminate\Http\Response;
 
 class Handler extends ExceptionHandler
 {
@@ -43,13 +47,33 @@ class Handler extends ExceptionHandler
      * @param  \Exception  $exception
      * @return \Illuminate\Http\Response|\Illuminate\Http\JsonResponse
      */
-    public function render($request, Exception $exception)
+    public function render($request, Exception $e)
     {
-        if($this->isHttpException($exception)){
-            if($exception->getStatusCode() === 404){
-                return response()->json(['success'=>false, 'error'=>'page not found'],404);
-            }
+        $status = Response::HTTP_INTERNAL_SERVER_ERROR;
+
+        if ($e instanceof HttpResponseException) {
+            $status = Response::HTTP_INTERNAL_SERVER_ERROR;
+          } 
+          elseif ($e instanceof NotFoundHttpException) {
+            $status = Response::HTTP_NOT_FOUND;
+            $e = new NotFoundHttpException('Page Not Found', $e);
+          }
+          elseif ($e instanceof MethodNotAllowedHttpException) {
+            $status = Response::HTTP_METHOD_NOT_ALLOWED;
+            $e = new MethodNotAllowedHttpException([], 'Http Method Not Allowed', $e);
+          }
+  
+        elseif($e->status === 422 ){
+            return response()->json([
+                'success'=>false, 
+                'message'=>$e->getMessage(),
+                'error'=>$e->getResponse()->original
+                ]);
         }
-        return parent::render($request, $exception);
+        elseif ($e) {
+            $e = new HttpException($status, 'HTTP_INTERNAL_SERVER_ERROR');
+          }
+            return response()->json(['success'=>false, 'status'=>$status,'error'=>$e->getMessage()]);
+        
     }
 }
