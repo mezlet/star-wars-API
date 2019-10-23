@@ -16,11 +16,6 @@ use Laravel\Lumen\Routing\Controller as BaseController;
 
 class MovieController extends Basecontroller{
 
-    private $redis;
-    public function __construct(){
-        // $this->redis = Redis::connection();
-    }
-
     /**
      * Get movie list
      * @param object request
@@ -28,7 +23,7 @@ class MovieController extends Basecontroller{
      */
     public function getMovieList(Request $request)
     {
-        try{       
+                try{       
             $movies = Helpers::getMovieList($request->offset, $request->limit);
             return response()->json(["success"=>true, "data"=>$movies],200);
 
@@ -36,7 +31,9 @@ class MovieController extends Basecontroller{
             return response()->json(["success"=>false, "error"=>$e->getMessage()]);
         }
         catch(\Exception $e){
-        return response()->json(["success"=>false, "error"=>'Something went wrong.'],500);
+            return response()->json(["success"=>false, "error"=>$e->getMessage()]);
+
+        // return response()->json(["success"=>false, "error"=>'Something went wrong.'],500);
         }
     }
 

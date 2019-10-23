@@ -17,8 +17,9 @@ class StarWars {
      */
     public static function getMovieData(string $link){
         $guzzle_client = new Client();
-        $redis = Redis::connection();
+        $redis = app('redis');
         if($movies_data = $redis->get($link)){
+            echo 'from cache';
             return json_decode($movies_data);
         }
         $response = $guzzle_client->request('GET',$link);
