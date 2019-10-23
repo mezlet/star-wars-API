@@ -37,8 +37,6 @@ class CommentController extends Basecontroller{
                  "success"=>true, "data"=>$comment,"message"=>'Comment created successfully.'],201);
                 }
                 
-        }catch(TypeError $e){
-            return response()->json([success=>false, error=>$e->getMessage()]);
         }
         catch(\Exception $e){
             return response()->json(["success"=>false, "error"=>'Something went wrong'],500);

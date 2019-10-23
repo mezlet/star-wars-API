@@ -24,62 +24,6 @@ public static function getCommentCount(string $id): int{
 }
 
 /**
- * Get movie list
- * @return array $movie_list
- */
-public  static function getMovieList(?int $offset=0, ?int $limit=7):array{
-    $data = StarWars::getMovieData("https://swapi.co/api/films") ;
-    $movie_list = [];
-
-    usort($data->results, function($a, $b){
-        return strcmp($a->release_date, $b->release_date);
-    });
-
-    foreach($data->results as $movie){
-        array_push($movie_list,[
-            'title' =>$movie->title,
-            'opening_crawl' =>$movie->opening_crawl,
-            'release_date' => $movie->release_date,
-            'url'=>$movie->url,
-            'movie_id' => explode('/',parse_url($movie->url)['path'])[3],
-            'comment_count'=>self::getCommentCount(explode('/',parse_url($movie->url)['path'])[3])
-        ]);
-    } ;
-
-     $paginated_list = array_slice($movie_list, $offset, $limit);
-
-    return $paginated_list;
-}
-
-/**
- * Get movie characters
- * @param string $id
- * @param string $sort_param
- * @param string $filter_param
- * @return array $movie_characters
- */
-    public static  function getMovieCharacters(int $id, ?string $sort_param, ?string $filter_param): array{
-        $data = StarWars::getMovieData('https://swapi.co/api/films/'.$id);
-
-        if(isset($data->original)) {
-            return false;
-        }
-
-            $movie_characters=[
-                'characters'=> self::sortData( $data->characters, $sort_param, $filter_param),
-                'realease_date'=> $data->release_date,
-                ];
-                $movie_characters['total_characters'] = count($movie_characters['characters']);
-                $movie_characters['total_height'] = array_reduce($movie_characters['characters'],
-                function($total, $item){
-                    return $total+$item['height'];
-                }
-            );
-            $movie_characters['total_height_in_feet'] = self::getHeight($movie_characters['total_height']);
-                return $movie_characters;
-        }
-
-/**
  * Get heights in feet and inches
  * @param string $height
  * @return string $converted_height
@@ -92,8 +36,6 @@ public static function getHeight(string $height): string{
     $converted_height ="$feet'$inch";
     return $converted_height;
 }
-
-
 
     /**
      * Filter movie character
@@ -127,9 +69,9 @@ public static function getHeight(string $height): string{
     {
             $movie_characters = [];
             $sum_height=0;
-
-            foreach($characters as $character){
-                $response = StarWars::getMovieData($character);
+            $total = count($characters);
+            for($i = 0; $i< $total; $i++){
+                $response = StarWars::getMovieData($characters[$i]);
                 array_push($movie_characters,array(
                 'name'=> $response->name, 
                 'gender'=>$response->gender, 

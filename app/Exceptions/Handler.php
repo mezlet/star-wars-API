@@ -49,6 +49,9 @@ class Handler extends ExceptionHandler
             if($exception->getStatusCode() === 404){
                 return response()->json(['success'=>false, 'error'=>'page not found'],404);
             }
+            else if (!$this->isHttpExcepton($exception)){
+                return response()->json(['success'=>false, 'error'=>'Something went wrong']);
+            }
         }
         return parent::render($request, $exception);
     }

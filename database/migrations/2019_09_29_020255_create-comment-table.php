@@ -15,6 +15,7 @@ class CreateCommentTable extends Migration
     {
         //
         Schema::create('comment', function (Blueprint $table) {
+            $table->index(['movie_id','created_at']);
             $table->bigIncrements('id');
             $table->string('ip');
             $table->text('comment');
