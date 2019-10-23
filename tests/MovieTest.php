@@ -1,33 +1,54 @@
 <?php
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Support\Facades\Redis;
-use GuzzleHttp\Exception\RequestException;
 
 class MovieTest extends TestCase
 
 {
-    // private $mockRedis;
-    // public function setUp(): void
-    // {
-    //     parent::setUp();
 
-
-    //     // try{
-    //     //     $redis=Redis::connect('127.0.0.1',3306);
-    //     //     echo ('redis working');
-    //     // }catch(\Predis\Connection\ConnectionException $e){
-    //     //     echo ('error connection redis');
-    //     // }
-
-    //     // $this->redis = Redis::connection();
-    // }
-
-    public function testShouldReturnMovieDetails()
+    public function testShouldReturnAllMovies()
     {
         $res = $this->get('api/v1/movies',[]);
-        dd($res);
+        $this->seeStatusCode(200);
+        $this->seeJson(['success' => true]);
+    }
+
+    public function testShouldReturnMovieCharacters()
+    {
+        $res = $this->get('api/v1/movies/1/characters',[]);
+        $this->seeStatusCode(200);
+        $this->seeJson(['success' => true]);
+    }
+
+    public function testShouldReturnErrorIfPageNotFound()
+    {
+        $res = $this->get('api/v1/movies/1/character',[]);
+        $this->seeStatusCode(404);
+        $this->seeJson(['success' => false]);
+    }
+
+    public function testShouldReturnErrorIfWrongParams()
+    {
+        $res = $this->get('api/v1/movies/bvjbchjdnjk/characters',[]);
+        $this->seeStatusCode(400);
+        $this->seeJson(['success' => false]);
+    }
+
+    public function testShouldReturnErrorIfMovieNotFound()
+    {
+        $res = $this->get('api/v1/movies/100/characters',[]);
+        $this->seeStatusCode(404);
+        $this->seeJson(['success' => false]);
+    }
+
+    public function testShouldReturnErrorIfWrongSortParam()
+    {
+        $res = $this->get('api/v1/movies/1/characters?sort_param=movie',[]);
+        $this->seeStatusCode(400);
+        $this->seeJson(['success' => false]);
+    }
+
+    public function testShouldSortCharacters()
+    {
+        $res = $this->get('api/v1/movies/1/characters?sort_param=name',[]);
         $this->seeStatusCode(200);
         $this->seeJson(['success' => true]);
     }
