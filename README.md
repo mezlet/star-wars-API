@@ -10,6 +10,8 @@
 	- [Get Comments](#getcomments)
 	- [Create Comment](#createcomment)
     - [Get Movie Characters](#getmoviecharacters)
+- [Endpoints](#endpoints)
+    -[Documentation](#documentation)
 
 
 ## Installation
@@ -189,4 +191,8 @@ filter_param: string
     ],
     "message": ""
 }
+```
+## Documentation 
+```
+https://documenter.getpostman.com/view/4259930/SVzuc2hn
 ```
