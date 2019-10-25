@@ -20,7 +20,7 @@ class CommentController extends Basecontroller{
      * @param object $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function addComment(Request $request, int $movie_id){
+    public function addComment(Request $request, int $movie_id):\Illuminate\Http\JsonResponse{
         $this->validate($request, ['comment' => 'required|string|max:500']); 
             try{
             $comment = Comment::create($request->all() + [
@@ -45,7 +45,7 @@ class CommentController extends Basecontroller{
      * @param object $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getComments(Request $request, int $movie_id){
+    public function getComments(Request $request, int $movie_id):\Illuminate\Http\JsonResponse{
 
         try{
 

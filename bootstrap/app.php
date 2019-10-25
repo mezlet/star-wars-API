@@ -68,7 +68,9 @@ $app->singleton(
 $app->routeMiddleware([
     'auth' => App\Http\Middleware\Authenticate::class,
     'validateParams' => App\Http\Middleware\ValidateParams::class,
-    'validateSorting' => App\Http\Middleware\ValidateSortFilter::class,
+    'sortCharacter' => App\Http\Middleware\SortCharacter::class,
+    'filterCharacter' => App\Http\Middleware\FilterCharacter::class,
+    'validateSortOrder'=>App\Http\middleware\SortOrder::class,
     'validatePaging' => App\Http\Middleware\ValidateOffsetLimit::class,
     'isMovieExist' => App\Http\Middleware\CheckMovie::class,
 

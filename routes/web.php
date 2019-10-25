@@ -21,7 +21,8 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
     });
     $router->group(['middleware' => ['validateParams','isMovieExist']], function () use ($router) {
         $router->get("/movies/{movie_id}/comments", 'CommentController@getComments');
-        $router->group(['middleware' => 'validateSorting'], function () use ($router) {
+        $router->group(['middleware' => ['sortCharacter', 'filterCharacter','validateSortOrder']],
+         function () use ($router) {
             $router->get("/movies/{movie_id}/characters/", 'MovieController@getMovie');
         });
         $router->post('movies/{movie_id}/comments', 'CommentController@addComment');

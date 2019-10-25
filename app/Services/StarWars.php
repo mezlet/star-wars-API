@@ -67,12 +67,13 @@ public  static function getMovieList(?int $offset=0, ?int $limit=7):array{
  * @param string $filter_param
  * @return array $movie_characters
  */
-public static  function getMovieCharacters(int $id, ?string $sort_param, ?string $filter_param):array{
+public static  function getMovieCharacters(int $id, ? string $sort_param, ?string $filter_param, ?string $sort_order):array{
     $data = self::getMovieData('https://swapi.co/api/films/'.$id);
     if(isset($data->original)) {
         return false;
     }
-    $characters = Helpers::sortData( $data->characters, $sort_param, $filter_param);
+    $characters = Helpers::sortData( $data->characters, $sort_param, $filter_param, $sort_order);
+    return $characters;
         $movie_characters=[
             'characters'=> $characters,
             'realease_date'=> $data->release_date,

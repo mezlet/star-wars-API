@@ -51,7 +51,7 @@ public static function getHeight(string $height): string{
 
         foreach($sorted_array as $character) {
         if(strcasecmp($character['gender'], $filter_param) == 0)
-        $filtered_array[] = $character;
+        array_push($filtered_array,$character);
     }
     return $filtered_array;
     }
@@ -65,26 +65,25 @@ public static function getHeight(string $height): string{
      * @return array $filtered_array
      */
 
-    public static function sortData(array $characters, ?string $sort_param, ?string $filter_param): array
+    public static function sortData(array $characters, ?string $sort_param,?string $filter_param, ?string $sort_order) :array
     {
-            $movie_characters = [];
-            $sum_height=0;
-            $total = count($characters);
-            for($i = 0; $i< $total; $i++){
-                $response = StarWars::getMovieData($characters[$i]);
-                array_push($movie_characters,array(
+        $movie_characters = [];
+        $sum_height=0;
+        $total = count($characters);
+        for($i = 0; $i< $total; $i++){
+            $response = StarWars::getMovieData($characters[$i]);
+            array_push($movie_characters,array(
                 'name'=> $response->name, 
                 'gender'=>$response->gender, 
                 'height'=>$response->height,
                 'height_in_feet'=>self::getHeight($response->height)));
             }
-
-            if(!$sort_param || empty($sort_param || $sort_param=null)){
-                return $movie_characters;
-            }
-            
-            usort($movie_characters, function($a, $b) use($sort_param)
-            {return strcmp($a[$sort_param], $b[$sort_param]);});
+            usort($movie_characters, function($a, $b) use($sort_param,$sort_order)
+            {
+                return (isset($sort_order) && $sort_order==='descending') ?
+                 strnatcmp($b[$sort_param],$a[$sort_param]):
+                 strnatcmp($a[$sort_param],$b[$sort_param]) ;
+            });
 
             $filtered_array = self::filterCharacters($movie_characters,$filter_param);  
 

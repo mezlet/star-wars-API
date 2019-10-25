@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 use App\Utils\Helpers;
 use Closure;
 
-class ValidateSortFilter
+class SortCharacter
 {
     /**
      * Handle an incoming request.
@@ -16,10 +16,8 @@ class ValidateSortFilter
     public function handle($request, Closure $next)
     {
         $sort_param = ['','name','gender','height'];
-        $filter_param=['','n/a','female','male'];
-        if ((isset($request->sort_param)&& !in_array($request->sort_param,$sort_param,false)) ||
-        ( isset($request->filter_param) && !in_array($request->filter_param,$filter_param,false))) {
-            return response()->json(['success'=>false, 'error'=>"Invalid sort/filter parameter supplied."],400);
+        if ((isset($request->sort_param)&& !in_array($request->sort_param,$sort_param,false))) {
+            return response()->json(['success'=>false, 'error'=>"Invalid sort parameter supplied."],400);
         }
         return $next($request);
     }

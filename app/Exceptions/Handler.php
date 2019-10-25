@@ -10,6 +10,7 @@ use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+
 use Illuminate\Http\Exception\HttpResponseException;
 use Illuminate\Http\Response;
 
@@ -63,7 +64,7 @@ class Handler extends ExceptionHandler
             $e = new MethodNotAllowedHttpException([], 'Http Method Not Allowed', $e);
           }
   
-        elseif($e->status === 422 ){
+        elseif($e instanceof ValidationException ){
             return response()->json([
                 'success'=>false, 
                 'message'=>$e->getMessage(),

@@ -20,9 +20,10 @@ class MovieTest extends TestCase
 
     public function testShouldReturnErrorIfPageNotFound()
     {
-        $res = $this->get('api/v1/movies/1/character',[]);
-        $this->seeStatusCode(404);
+        $res = $this->get('api/v1/movie/1/characters',[]);
         $this->seeJson(['success' => false]);
+        $this->seeJson(['status' => 404]);
+
     }
 
     public function testShouldReturnErrorIfWrongParams()
