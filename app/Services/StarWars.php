@@ -67,23 +67,20 @@ public  static function getMovieList(?int $offset=0, ?int $limit=7):array{
  * @param string $filter_param
  * @return array $movie_characters
  */
-public static  function getMovieCharacters(int $id, ? string $sort_param, ?string $filter_param, ?string $sort_order):array{
+public static  function getMovieCharacters(int $id, ? string $sort_param, ?string $filter_param, ?string $sort_order){
     $data = self::getMovieData('https://swapi.co/api/films/'.$id);
     if(isset($data->original)) {
         return false;
     }
     $characters = Helpers::sortData( $data->characters, $sort_param, $filter_param, $sort_order);
-    return $characters;
-        $movie_characters=[
-            'characters'=> $characters,
-            'realease_date'=> $data->release_date,
-            ];
-            $movie_characters['total_characters'] = count($movie_characters['characters']);
-            $movie_characters['total_height'] = array_reduce($movie_characters['characters'],
-            function($total, $item){
-                return $total+$item['height'];
-            }
-        );
+    $movie_characters=[
+        'characters'=> $characters,
+        'realease_date'=> $data->release_date,
+    ];
+    $movie_characters['total_characters'] = count($movie_characters['characters']);
+    $movie_characters['total_height'] = array_reduce($movie_characters['characters'],
+    function($total, $item){
+        return $total+ (int)$item['height'];});
         $movie_characters['total_height_in_feet'] = Helpers::getHeight($movie_characters['total_height']);
             return $movie_characters;
     }

@@ -9,6 +9,8 @@ use Illuminate\Validation\ValidationException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\ClientErrorResponseException;
+use Symfony\Component\HttpKernel\Exception\RequestException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 use Illuminate\Http\Exception\HttpResponseException;
@@ -63,6 +65,11 @@ class Handler extends ExceptionHandler
             $status = Response::HTTP_METHOD_NOT_ALLOWED;
             $e = new MethodNotAllowedHttpException([], 'Http Method Not Allowed', $e);
           }
+          elseif ($e instanceof ClientErrorResponseException ) {
+            return response()->json([
+              'success'=>false, 
+              'error'=>'Service time out please try again.'
+              ]);          }
   
         elseif($e instanceof ValidationException ){
             return response()->json([
@@ -71,6 +78,13 @@ class Handler extends ExceptionHandler
                 'error'=>$e->getResponse()->original
                 ]);
         }
+        elseif($e instanceof RequestException ){
+          return response()->json([
+              'success'=>false, 
+              'message'=>$e->getMessage(),
+              'error'=>$e->getResponse()->original
+              ]);
+      }
         elseif ($e) {
             $e = new HttpException($status, 'HTTP_INTERNAL_SERVER_ERROR');
           }

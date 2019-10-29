@@ -29,9 +29,9 @@ public static function getCommentCount(string $id): int{
  * @return string $converted_height
  */
 public static function getHeight(string $height): string{
-    $number= $height *  0.0328;
+    $number= (int)$height *  0.0328;
     $feet= floor($number);
-    $fraction = $number -$feet;
+    $fraction = $number - $feet;
     $inch = round($fraction * 12);
     $converted_height ="$feet'$inch";
     return $converted_height;
@@ -50,8 +50,7 @@ public static function getHeight(string $height): string{
         }
 
         foreach($sorted_array as $character) {
-        if(strcasecmp($character['gender'], $filter_param) == 0)
-        array_push($filtered_array,$character);
+        if(strcasecmp($character['gender'], $filter_param) == 0) array_push($filtered_array,$character);
     }
     return $filtered_array;
     }
@@ -65,7 +64,7 @@ public static function getHeight(string $height): string{
      * @return array $filtered_array
      */
 
-    public static function sortData(array $characters, ?string $sort_param,?string $filter_param, ?string $sort_order) :array
+    public static function sortData(array $characters, ?string $sort_param,?string $filter_param, ?string $sort_order)
     {
         $movie_characters = [];
         $sum_height=0;
@@ -76,13 +75,14 @@ public static function getHeight(string $height): string{
                 'name'=> $response->name, 
                 'gender'=>$response->gender, 
                 'height'=>$response->height,
-                'height_in_feet'=>self::getHeight($response->height)));
+                'height_in_feet'=>self::getHeight($response->height)
+            ));
             }
             usort($movie_characters, function($a, $b) use($sort_param,$sort_order)
             {
                 return (isset($sort_order) && $sort_order==='descending') ?
-                 strnatcmp($b[$sort_param],$a[$sort_param]):
-                 strnatcmp($a[$sort_param],$b[$sort_param]) ;
+                strnatcmp($b[$sort_param],$a[$sort_param]):
+                strnatcmp($a[$sort_param],$b[$sort_param]) ;
             });
 
             $filtered_array = self::filterCharacters($movie_characters,$filter_param);  

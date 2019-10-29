@@ -35,7 +35,7 @@ class MovieController extends Basecontroller{
      * @param object $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getMovie(Request $request, int $movie_id): \Illuminate\Http\JsonResponse{
+    public function getMovie(Request $request, int $movie_id){
         $this->sort_param = isset($request->sort_param) ? $request->sort_param : 'name';
         try{
             $characters = StarWars::getMovieCharacters($movie_id,$this->sort_param,$request->filter_param, $request->sort_order);
@@ -43,8 +43,6 @@ class MovieController extends Basecontroller{
 
         }
         catch(\Exception $e){
-            return response()->json(["success"=>false, "error"=>$e->getMessage()],500);
-
             return response()->json(["success"=>false, "error"=>'Something went wrong.'],500);
         }
     }
