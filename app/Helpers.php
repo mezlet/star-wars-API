@@ -28,7 +28,7 @@ public static function getCommentCount(string $id): int{
  * @param string $height
  * @return string $converted_height
  */
-public static function getHeight(string $height): string{
+public static function getHeight(?string $height): string{
     $number= (int)$height *  0.0328;
     $feet= floor($number);
     $fraction = $number - $feet;
@@ -75,7 +75,7 @@ public static function getHeight(string $height): string{
                 'name'=> $response->name, 
                 'gender'=>$response->gender, 
                 'height'=>$response->height,
-                'height_in_feet'=>self::getHeight($response->height)
+                'height_in_feet'=>self::getHeight((int)$response->height)
             ));
             }
             usort($movie_characters, function($a, $b) use($sort_param,$sort_order)
